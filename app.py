@@ -15,15 +15,20 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 
 # Can upload only one file at a time. Multiple files not allowed
 # Works only for files with `.xlsx` extension
+
 app_ui = ui.page_fluid(
     ui.input_file("input_file", "Choose a file to upload:", multiple=False),
+    ui.h3("Mean Absolute Error:"),
+    ui.output_text_verbatim("mae"),
+    ui.h3("Mean Absolute Percentage Error:"),
+    ui.output_text_verbatim("mape"),
+    ui.h3("Root Mean Square Error:"),
+    ui.output_text_verbatim("rmse"),
     ui.output_plot("plot"),
     ui.output_plot("seasonal_decompose_plot"),
     ui.output_plot("holt_winters_seasonal_plot"),
     ui.output_plot("forecast_plot"),
-    ui.output_text("mae"),
-    ui.output_text("rmse"),
-    ui.output_text("mape")
+
 )
 
 def server(input, output, session):
@@ -130,18 +135,18 @@ def server(input, output, session):
         @output
         @render.text
         def mae():
-            return f'Mean Absolute Error: {mean_absolute_error(df_test,predictions_on_test_data)}'
+            return f'{mean_absolute_error(df_test,predictions_on_test_data)}'
 
         @output
         @render.text
         def rmse():
             rmse = lambda act, pred: np.sqrt(mean_squared_error(act, pred))
-            return f' Root Mean Square Error: {rmse(df_test, predictions_on_test_data)}'
+            return f'{rmse(df_test, predictions_on_test_data)}'
 
         @output
         @render.text
         def mape():
-            return f'Mean Absolute Percentage Error: {mean_absolute_percentage_error(df_test, predictions_on_test_data)}'
+            return f'{mean_absolute_percentage_error(df_test, predictions_on_test_data)}'
 
 
         return sales_data_plot
