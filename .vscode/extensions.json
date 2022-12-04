@@ -1,0 +1,17 @@
+{
+    "recommendations": [
+        "davidanson.vscode-markdownlint",
+        "eriklynd.json-tools",
+        "mhutchie.git-graph",
+        "mikestead.dotenv",
+        "ms-azuretools.vscode-docker",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "ms-python.python",
+        "redhat.vscode-yaml",
+        "ryanluker.vscode-coverage-gutters",
+        "sonarsource.sonarlint-vscode",
+        "spmeesseman.vscode-taskexplorer",
+        "swyphcosmo.spellchecker",
+        "tyriar.sort-lines"
+    ]
+}
