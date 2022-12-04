@@ -6,3 +6,5 @@ numpy
 rsconnect-python
 pandas
 statsmodels
+shiny
+scikit-learn
