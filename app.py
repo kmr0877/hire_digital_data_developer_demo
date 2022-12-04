@@ -15,7 +15,6 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 
 # Can upload only one file at a time. Multiple files not allowed
 # Works only for files with `.xlsx` extension
-
 app_ui = ui.page_fluid(
     ui.input_file("input_file", "Choose a file to upload:", multiple=False),
     ui.output_plot("plot"),
@@ -28,15 +27,20 @@ app_ui = ui.page_fluid(
 )
 
 def server(input, output, session):
+    MAX_SIZE = 2000000
 
     @output
     @render.plot()
     def plot():
-
         m = 12
         alpha = 1/(2*m)
         train_test_split_ratio = 0.8
-        infile = Path(__file__).parent/"Data.xlsx"
+
+        file_inputs = input.input_file()
+        if file_inputs:
+            infile = file_inputs[0]['datapath']
+        else:
+            infile = Path(__file__).parent/"Data.xlsx"
 
         product_sales_info = pd.read_excel(
             infile, index_col='PO Date', parse_dates=True

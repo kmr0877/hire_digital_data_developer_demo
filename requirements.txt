@@ -1,10 +1,11 @@
 # Pandas needs Jinja2 for table styling, but it doesn't (yet) load automatically
 # in Pyodide, so we need to explicitly list it here.
 Jinja2
-openpyxl
+matplotlib
 numpy
-rsconnect-python
+openpyxl
 pandas
-statsmodels
-shiny
+rsconnect-python
 scikit-learn
+shiny
+statsmodels
