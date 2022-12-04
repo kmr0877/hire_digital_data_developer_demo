@@ -27,3 +27,15 @@ This repo is used to demonstrate a simple holt winters seasonal forecasting mode
 
 - You will need to present the application and explain its functionality to a Hire Digital Technical Recruiter.
 
+# **NOTE**
+- Only one file is allowed to upload at a time.Multiple files not allowed
+- Only files with `*.xlsx` extension are allowed
+- Web app takes about *5-15 secs* on an average depending on responsiveness of `shinyapps.io` server for the results to appear on the screen
+- A successful run will look as shown below
+  ![1670154654820](image/README/1670154654820.png)
+- On opening web app, by default you are presented with results based on the `data.xlsx` provided
+- A sample demo on usage of the webapp can be seen at `./demo_video.mp4` video file
+- Netiher this code nor webapp is production grade and is purely for demonstration purposes only
+- Code does have multiple anti patterns and doesn't conform to any development standards
+-
+### For any queries relating to any content in this repo, please reach out to: kmr0877@gmail.com

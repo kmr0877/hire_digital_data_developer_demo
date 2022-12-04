@@ -13,8 +13,6 @@ from statsmodels.tsa.holtwinters import (ExponentialSmoothing,
                                          SimpleExpSmoothing)
 from statsmodels.tsa.seasonal import seasonal_decompose
 
-# Can upload only one file at a time. Multiple files not allowed
-# Works only for files with `.xlsx` extension
 
 app_ui = ui.page_fluid(
     ui.input_file("input_file", "Choose a file to upload:", multiple=False),
@@ -37,14 +35,22 @@ def server(input, output, session):
     @output
     @render.plot()
     def plot():
+        # Variables
         m = 12
         alpha = 1/(2*m)
+
+        # Assuming train test split of 80 and 20
+        # TODO: Add sliding window cross validation
         train_test_split_ratio = 0.8
 
+        # Read file inputs
         file_inputs = input.input_file()
+
         if file_inputs:
+            # Assuming we allow only one file to upload
             infile = file_inputs[0]['datapath']
         else:
+            # If no file is uploaded, we default to local file on server
             infile = Path(__file__).parent/"Data.xlsx"
 
         product_sales_info = pd.read_excel(
@@ -52,7 +58,7 @@ def server(input, output, session):
         )
         product_sales_info.sort_index(inplace=True)
 
-
+        # Removing NaNs
         product_sales_info_without_nulls = \
             product_sales_info[product_sales_info['Sales Amt'].notna()]
 
@@ -72,16 +78,19 @@ def server(input, output, session):
 
         holt_winters_df = resampled_df[['Sales Amt']]
 
+        # Plot sales data by month
         sales_data_plot = holt_winters_df.plot(title='Sales by Month')
 
         @output
         @render.plot()
         def seasonal_decompose_plot():
+            # Seasonal decomposition
             seasonal_decompose_result = seasonal_decompose(
                 holt_winters_df['Sales Amt'], model='multiplicative', period=12)
             seasonal_decompose_plot = seasonal_decompose_result.plot()
             return seasonal_decompose_plot
 
+        # Set index frequency to month
         holt_winters_df.index.freq = 'M'
 
         @output
@@ -109,11 +118,15 @@ def server(input, output, session):
 
             return holt_winters_seasonal_plot
 
+        # Get training data size based on available dataset and take recent
+        # 20% data for testing and remainder for training
         train_size = round(len(resampled_df) * train_test_split_ratio)
+
         resampled_df = resampled_df[['Sales Amt']]
         df_train = resampled_df[:train_size]
         df_test = resampled_df[train_size:]
 
+        # Fit model
         fitted_model = ExponentialSmoothing(
             resampled_df['Sales Amt'],
             trend='mul',
@@ -121,7 +134,11 @@ def server(input, output, session):
             seasonal_periods=12
         ).fit()
 
+        # Forecast for next 24 months
         forecast = fitted_model.forecast(24)
+
+        # Run model against test data set to compare actual values
+        # against predicted values and see how the model performs
         predictions_on_test_data = fitted_model.predict(
             start=df_test.index[0], end=df_test.index[-1]
         )
